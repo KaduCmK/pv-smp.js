@@ -1,0 +1,10 @@
+# fly.toml app configuration file generated for pv-smp-js on 2023-11-10T21:37:59-03:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "pv-smp-js"
+primary_region = "gru"
+
+[build]
+

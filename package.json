@@ -1,0 +1,20 @@
+{
+  "name": "pv-smp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Carlos Eduardo",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.13.0",
+    "dotenv": "^16.3.1",
+    "undici": "^5.27.2"
+  },
+  "devDependencies": {
+    "@flydotio/dockerfile": "^0.4.10",
+    "nodemon": "^3.0.1"
+  }
+}
