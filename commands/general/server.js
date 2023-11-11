@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { request } = require('undici')
+require('dotenv').config()
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,9 +16,11 @@ module.exports = {
                                 .setName('status')
                                 .setDescription('Checa se o server está online')),
     async execute(interaction) {
+        const serverHttp = process.env.SERVER_HTTP
+
         if (interaction.options.getSubcommand() === 'iniciar') {
             await interaction.reply(`${interaction.user.username} está iniciando o servidor`)
-            const { statusCode } = await request('https://hrgt3asmotbyt3mx67qrkr2lji0qyfuz.lambda-url.us-east-1.on.aws/?operation=1')
+            const { statusCode } = await request(`${serverHttp}?operation=1`)
             if (statusCode == 200) {
                 await interaction.followUp('O servidor está iniciando. Deve demorar ~3min...')
             }
@@ -25,7 +28,7 @@ module.exports = {
 
         else if (interaction.options.getSubcommand() === 'desligar') {
             await interaction.reply(`${interaction.user.username} está encerrando o servidor...`)
-            const { statusCode } = await request('https://hrgt3asmotbyt3mx67qrkr2lji0qyfuz.lambda-url.us-east-1.on.aws/?operation=0')
+            const { statusCode } = await request(`${serverHttp}?operation=0`)
             if (statusCode == 200) {
                 await interaction.followUp('Servidor encerrado.')
             }

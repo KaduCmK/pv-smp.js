@@ -57,7 +57,8 @@ client.once(Events.ClientReady, c => {
 
 			if (online && players.online == 0) {
 				console.log("Não há players online. Encerrando server...")
-				const encerrar = await request('https://hrgt3asmotbyt3mx67qrkr2lji0qyfuz.lambda-url.us-east-1.on.aws/?operation=0')
+				await client.channels.cache.get('975895816067756099').send("Não há players online. Encerrando server...")
+				const encerrar = await request(`${serverHttp}?operation=0`)
 				if(encerrar.statusCode == 200) console.log("Servidor encerrado devido a inatividade.")
 
 			}
