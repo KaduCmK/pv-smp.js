@@ -51,6 +51,7 @@ client.once(Events.ClientReady, c => {
 	setInterval(async () =>{
 		console.log("Checagem de players online")
 
+		const serverHttp = process.env.SERVER_HTTP
 		const { statusCode, body } = await request('https://api.mcstatus.io/v2/status/java/54.205.108.34')
 		if (statusCode == 200) {
 			const { online, players } = await body.json()
