@@ -4,6 +4,28 @@ const path = require('node:path');
 const { request } = require('undici');
 const token = process.env.DISCORD_TOKEN
 
+// express
+const express = require('express')
+const app = express()
+const port = process.env.port || 3000
+
+app.get('/', (req, res) => {
+	console.log('GET recebido')
+	res.send({aloamigo: true})
+})
+app.get('/server', async (req, res) => {
+	if (req.query.started) {
+		console.log('Server iniciou')
+		await client.channels.cache.get('975895816067756099').send("**O servidor está pronto!**")
+		res.send({statusCode: 200})
+	}
+	else {
+		res.send({statusCode: 500})
+	}
+})
+
+app.listen(port, () => console.log(`Backend rodando na porta ${port}`))
+
 const client = new Client({ intents: [GatewayIntentBits.Guilds]})
 
 client.commands = new Collection();
@@ -67,7 +89,7 @@ client.once(Events.ClientReady, c => {
 				console.log("Há players online.")
 			}
 			else {
-				console.log("Server está ofline no momento.")
+				console.log("Server está offline no momento.")
 			}
 		}
 		else {

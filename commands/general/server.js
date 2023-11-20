@@ -22,7 +22,7 @@ module.exports = {
             await interaction.reply(`${interaction.user.username} está iniciando o servidor`)
             const { statusCode } = await request(`${serverHttp}?operation=1`)
             if (statusCode == 200) {
-                await interaction.followUp('O servidor está iniciando. Deve demorar ~3min...')
+                await interaction.followUp('O servidor está iniciando. Vou avisar quando estiver pronto...')
             }
         }
 
