@@ -14,7 +14,10 @@ module.exports = {
                                 .setDescription('[precisa de cargo] Encerra o servidor'))
         .addSubcommand(subc => subc
                                 .setName('status')
-                                .setDescription('Checa se o server está online')),
+                                .setDescription('Checa se o server está online'))
+        .addSubcommand(subc => subc
+                                .setName('players')
+                                .setDescription('[precisa de cargo] lista os jogadores online')),
     async execute(interaction) {
         const serverHttp = process.env.SERVER_HTTP
         
@@ -61,6 +64,29 @@ module.exports = {
                     }
                 }
                 break
+
+            case 'players':
+                await interaction.deferReply()
+
+                const { statusCode: playersStatusCode, body:playersHttpBody } = await request('https://api.mcstatus.io/v2/status/java/54.205.108.34')
+                if (playersStatusCode == 200) {
+                    const response = await playersHttpBody.json()
+
+                    if (!response.online) {
+                        await interaction.editReply('Ocorreu um erro. O server pode estar offline')
+                    }
+                    else {
+                        const playersOnline = response.players.online
+                        const playersList = response.players.list
+
+                        let stringResponse = `${playersOnline} jogadores online:\n`
+                        playersList.forEach(element => {
+                            stringResponse.concat(element.nameClean+'\n')
+                        });
+
+                        await interaction.editReply({ content: stringResponse, ephemeral: true})
+                    }
+                }
         }
     }
 }
