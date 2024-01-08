@@ -5,18 +5,36 @@ const { request } = require('undici');
 const token = process.env.DISCORD_TOKEN
 
 // express
-const express = require('express')
+const express = require('express');
+const { log } = require('node:console');
 const app = express()
 const port = process.env.port || 3000
 
+let ec2IP = ""
+
 app.get('/', (req, res) => {
-	console.log('GET recebido')
+	console.log(`GET recebido de ${req.header('fly-client-ip')}`)
 	res.send({aloamigo: true})
 })
 app.get('/server', async (req, res) => {
 	if (req.query.started) {
+		ec2IP = req.header('fly-client-ip')
+
+		fs.readFile('serverconfig.json', 'utf-8', function readFileCallback(err, data) {
+			if (err) throw err; else {
+				obj = JSON.parse(data)
+				obj.ec2Ip = ec2IP
+				json = JSON.stringify(obj)
+				fs.writeFile('serverconfig.json', json, function(err) {
+					if (err) throw err;
+				})
+			}
+		})
+
 		console.log('Server iniciou')
 		await client.channels.cache.get('975895816067756099').send("**O servidor está pronto!**")
+		await client.channels.cache.get('975895816067756099').send(`Entre pelo IP \`${ec2IP}\``)
+		
 		res.send({statusCode: 200})
 	}
 	else {
@@ -74,7 +92,8 @@ client.once(Events.ClientReady, c => {
 		console.log("Checagem de players online")
 
 		const serverHttp = process.env.SERVER_HTTP
-		const { statusCode, body } = await request('https://api.mcstatus.io/v2/status/java/54.205.108.34')
+		const { statusCode, body } = await request(`https://api.mcstatus.io/v2/status/java/${ec2IP}`)
+		console.log(`GET	https://api.mcstatus.io/v2/status/java/${ec2IP}`)
 		if (statusCode == 200) {
 			const { online, players } = await body.json()
 
@@ -98,4 +117,5 @@ client.once(Events.ClientReady, c => {
 	}, 600000)
 })
 
+console.log(token);
 client.login(token)
